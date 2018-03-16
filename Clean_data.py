@@ -30,36 +30,11 @@ def replace_missing(df):
     return df
 
 
-def discretization(label, input, n):
-    r = 0
-    positive = label.sum()  # good clients
-    negative = label.count() - positive  # bad clients
-    while np.abs(r) < 1:
-        d1 = pd.DataFrame({"X": input, "Y": label, "Bucket": pd.qcut(input, n)})
-        print("*" * 100)
-        print("This is d1: ", d1)
-        d2 = d1.groupby("Bucket", as_index=True)
-        r, p = stats.spearmanr(d2.mean().input, d2.mean().label)
-        n = n - 1
-    d3 = pd.DataFrame(d2.input.min(), columns=['min'])
-    d3['min'] = d2.min().input
-    d3['max'] = d2.max().input
-    d3['sum'] = d2.sum().label
-    d3['total'] = d2.count().label
-    d3['rate'] = d2.mean().label
-    d3['woe'] = np.log(d3['rate']/(1-d3['rate']))/(positive/negative)
-    d4 = (d3.sort_index(by='min')).reset_index(drop=True)
-    print("*"*100)
-    print("This is d4: ", d4)
-    return d4
-
 if __name__ == '__main__':
-
 
     # loading data
     df = pd.read_csv('cs-training.csv')
     # print("This is df: ", df.head())
-    del df['Id']
     df.describe().to_csv('Data_description.csv')
     # Solve the missing value issue
     df_new = replace_missing(df)
