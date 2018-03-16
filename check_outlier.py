@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cross_validation import train_test_split
+import seaborn as sns
 
 
 def outlier_processing(df, col):
@@ -34,3 +35,12 @@ if __name__ == '__main__':
     test.to_csv('TestData.csv', index=False)
     # print(train.shape)
     # print(test.shape)
+    corr = df_new.corr()
+    x_axis = ['x1', 'x2', 'x3', 'x4', 'x5', 'x6', 'x7', 'x8', 'x9', 'x10']
+    y_axis = list(corr.index)
+    fig = plt.figure()
+    ax1 = fig.add_subplot(1, 1, 1)
+    sns.heatmap(corr, annot=True, cmap='rainbow', ax=ax1, annot_kws={'size': 9, 'weight': 'bold', 'color': 'blue'})
+    ax1.set_xticklabels(x_axis, rotation=0, fontsize=10)
+    ax1.set_yticklabels(y_axis, rotation=0, fontsize=10)
+    plt.show()
